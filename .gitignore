@@ -1,0 +1,16 @@
+# CMake stuffs
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile
+
+# vim stuffs
+*.swp
+
+# libraries
+lib
+
+# binaries
+bin
+
+
