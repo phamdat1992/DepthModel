@@ -1,0 +1,35 @@
+
+   Camera Intrinsics
+                    IntrinsicMatrix: [3x3 double]
+                        FocalLength: [1.7713e+03 1.7603e+03]
+                     PrincipalPoint: [948.7375 597.5194]
+                               Skew: 0
+
+   Lens Distortion
+                   RadialDistortion: [0.3024 -0.6197]
+               TangentialDistortion: [0 0]
+
+   Camera Extrinsics
+                   RotationMatrices: [3x3x113 double]
+                 TranslationVectors: [113x3 double]
+
+   Accuracy of Estimation
+              MeanReprojectionError: 0.5704
+                 ReprojectionErrors: [88x2x113 double]
+                  ReprojectedPoints: [88x2x113 double]
+
+   Calibration Settings
+                        NumPatterns: 113
+                        WorldPoints: [88x2 double]
+                         WorldUnits: 'mm'
+                       EstimateSkew: 0
+    NumRadialDistortionCoefficients: 2
+       EstimateTangentialDistortion: 0
+
+
+estimationErrors = 
+
+  cameraCalibrationErrors with properties:
+
+    IntrinsicsErrors: [1x1 intrinsicsEstimationErrors]
+    ExtrinsicsErrors: [1x1 extrinsicsEstimationErrors]

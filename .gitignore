@@ -8,9 +8,13 @@ Makefile
 *.swp
 
 # libraries
-lib
+lib/
 
 # binaries
-bin
+bin/
+demo
 
+# .log files
+*.log
 
+images/
