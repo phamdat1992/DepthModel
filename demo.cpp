@@ -1,10 +1,12 @@
 #include <opencv2/opencv.hpp>
+#include <opencv2/viz.hpp>
 #include <string>
 #include <vector>
 #include "CameraRayCalculator.hpp"
 #include "BruteForceModelBuilder.hpp"
 #include "Visualizer.hpp"
 #include "utils.hpp"
+#include "Octree.hpp"
 
 using namespace cv;
 using namespace std;
@@ -26,6 +28,7 @@ ModelContainer getModelContainer(const FileNode& containerParam) {
     containerParam["cellSize"] >> ans.cellSize;
     return ans;
 }
+
 
 class DevData {
 public:

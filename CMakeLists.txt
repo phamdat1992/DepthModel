@@ -14,6 +14,7 @@ find_package(OpenCV REQUIRED)
 
 # the files are added in the dependences way
 add_library(DepthModel
+  ./src/Triangle3D.cpp
   ./src/PoseWrapper.cpp
   ./src/CameraRayCalculator.cpp
   ./src/utils.cpp

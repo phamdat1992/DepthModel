@@ -11,7 +11,7 @@ class RayLine {
   public:
     // Const được dùng vì chủ yếu mình muốn là direction không được
     // gán lại (immutablle).
-    cv::Point3f endPoint;
+    cv::Vec3f endPoint;
     /**
      * Notes: độ dài của direction luôn là 1 và được chuẩn hóa
      * ngay khi khởi tạo.
@@ -19,7 +19,7 @@ class RayLine {
     cv::Vec3f direction;
 
     RayLine() {}
-    RayLine(cv::Point3f _endPoint, cv::Vec3f _direction);
+    RayLine(cv::Vec3f _endPoint, cv::Vec3f _direction);
 
     /**
      * Copy constructor
@@ -29,7 +29,7 @@ class RayLine {
     /**
      * @return The projection point of the input point on the ray
      */
-    cv::Point3f projection(const cv::Point3f& point) const;
+    cv::Vec3f projection(const cv::Vec3f & point) const;
 
     RayLine& operator= (const RayLine& other);
 };
@@ -41,7 +41,7 @@ class ColorRayLine : public RayLine {
 
     ColorRayLine() {}
 
-    ColorRayLine(cv::Point3f _endPoint, cv::Vec3f _direction, cv::Vec3b _color);
+    ColorRayLine(cv::Vec3f _endPoint, cv::Vec3f _direction, cv::Vec3b _color);
     ColorRayLine(const ColorRayLine& other);
     ColorRayLine& operator=(const ColorRayLine& other);
 };
