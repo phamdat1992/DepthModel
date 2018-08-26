@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <opencv2/viz.hpp>
 #include <vector>
 #include <unordered_map>
 #include "ModelBuilder.hpp"
@@ -34,6 +35,8 @@ public:
     virtual void remove(const ModelPoint& point) override;
 
     virtual void clear() override;
+
+    virtual cv::viz::WCloud toVizWidget() override;
 };
 
 

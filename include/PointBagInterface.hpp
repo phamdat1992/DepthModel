@@ -1,5 +1,6 @@
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <opencv2/viz.hpp>
 #include <vector>
 #include "RayLine.hpp"
 
@@ -34,6 +35,8 @@ public:
     virtual void remove(const ModelPoint& point) = 0;
 
     virtual void clear() = 0;
+
+    virtual cv::viz::WCloud toVizWidget() = 0;
 };
 
 } // DepthModel

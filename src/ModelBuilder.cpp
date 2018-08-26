@@ -36,5 +36,11 @@ void ModelBuilderBase::process(Mat imageFrame, const PoseWrapper& pose) {
         this->mainProcess(imageFrame, pose);
     }
 }
+
+viz::WWidgetMerger ModelBuilderBase::toVizWidget() {
+    viz::WWidgetMerger ans;
+    ans.addWidget(this->pointBag->toVizWidget());
+    return ans;
+}
     
 } // DepthModel

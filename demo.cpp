@@ -10,6 +10,7 @@
 
 using namespace cv;
 using namespace std;
+using namespace viz;
 using namespace DepthModel;
 
 const string capture_output_dir = "./capture-output";
@@ -143,7 +144,6 @@ int main(int, char**) {
     PoseWrapper pose1 = lookAt(Vec3f(0, 30, 0), Vec3f(0, 15, 70));
     PoseWrapper pose2 = lookAt(Vec3f(90, 30, 35), Vec3f(41, 16.75, 77));
 
-
     Visualizer vis;
     vis.camMat = camMat;
 
@@ -190,51 +190,60 @@ int main(int, char**) {
         }
     };
 
-    Visualizer::cameraThickness = 50;
-    for (;;) {
-        render();
-        imshow("Visualize model", vis.result);
-        int k = waitKey(50);
-        if (k == 27 or k == 'q' or k == 'Q') {
-            break;
-        }
-        if (k == 'r' or k == 'R') {
-            dd.readData();
-        }
-        if (k == 'w' or k == 'W') {
-            dd.writeData();
-        }
-        if (k == 's' or k == 'S') {
-            string filename = "";
-            while (filename == "") {
-                cout << "Saving screenshot with file name: ";
-                cin >> filename;
-            }
-            filename = capture_output_dir + "/" + filename + ".png";
-            imwrite(filename, vis.result);
-            cout << "Saved " << filename << endl;
-        }
-        if ((k == 'p' or k == 'P') and framepose == 0) {
-            cout << "Start record video with rotate gamma" << endl;
-            string filename = capture_output_dir + "/recored-vid.mp4";
-            VideoWriter vw(
-                filename,
-                VideoWriter::fourcc('P','I','M','1'),
-                30,
-                Size(imgWidth, imgHeight)
-            );
-            for (int i = 180; i >= -180; --i) {
-                dd.viewerGamma = i;
-                render();
-                imshow("Visualize model", vis.result);
-                vw << vis.result;
-                waitKey(10);
-            }
-            dd.readData();
-            cout << "Record complete" << endl;
-            vw.release();
-        }
+    viz::Viz3d displayWindow("Display window");
+    displayWindow.showWidget("Coordinate Widget", viz::WCoordinateSystem());
+    displayWindow.showWidget("Point cloud", mb->toVizWidget());
+    while(!displayWindow.wasStopped())
+    {
+        displayWindow.spinOnce(16, true);
     }
+
+
+    //Visualizer::cameraThickness = 50;
+    //for (;;) {
+        //render();
+        //imshow("Visualize model", vis.result);
+        //int k = waitKey(50);
+        //if (k == 27 or k == 'q' or k == 'Q') {
+            //break;
+        //}
+        //if (k == 'r' or k == 'R') {
+            //dd.readData();
+        //}
+        //if (k == 'w' or k == 'W') {
+            //dd.writeData();
+        //}
+        //if (k == 's' or k == 'S') {
+            //string filename = "";
+            //while (filename == "") {
+                //cout << "Saving screenshot with file name: ";
+                //cin >> filename;
+            //}
+            //filename = capture_output_dir + "/" + filename + ".png";
+            //imwrite(filename, vis.result);
+            //cout << "Saved " << filename << endl;
+        //}
+        //if ((k == 'p' or k == 'P') and framepose == 0) {
+            //cout << "Start record video with rotate gamma" << endl;
+            //string filename = capture_output_dir + "/recored-vid.mp4";
+            //VideoWriter vw(
+                //filename,
+                //VideoWriter::fourcc('P','I','M','1'),
+                //30,
+                //Size(imgWidth, imgHeight)
+            //);
+            //for (int i = 180; i >= -180; --i) {
+                //dd.viewerGamma = i;
+                //render();
+                //imshow("Visualize model", vis.result);
+                //vw << vis.result;
+                //waitKey(10);
+            //}
+            //dd.readData();
+            //cout << "Record complete" << endl;
+            //vw.release();
+        //}
+    //}
 
     delete mb;
     fs.release();

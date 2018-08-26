@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/viz.hpp>
 #include <vector>
 #include "CameraRayCalculator.hpp"
 #include "ModelContainer.hpp"
@@ -57,6 +58,9 @@ public:
     inline const CameraRayCalculator& getCameraRayCalculator() {
         return this->cameraRayCalculator;
     }
+  
+    cv::viz::WWidgetMerger toVizWidget();
+    
 };
 
 } // DepthModel

@@ -9,6 +9,7 @@
 #include "BruteForceModelBuilder.hpp"
 
 using namespace cv;
+
 using namespace std;
 
 namespace DepthModel {
@@ -70,6 +71,18 @@ void BruteForcePointBag::remove(const ModelPoint& point) {
 void BruteForcePointBag::clear() {
     this->data.clear();
 }
+
+viz::WCloud BruteForcePointBag::toVizWidget() {
+    vector<Point3f> points;
+    vector<Vec3b> colors;
+    for (auto& i: this->data) {
+        auto& point = i.second;
+        points.push_back(point.position);
+        colors.push_back(point.getColor());
+    }
+    return viz::WCloud(points, colors);
+}
+
 
 
 BruteForceModelBuilder::BruteForceModelBuilder(
