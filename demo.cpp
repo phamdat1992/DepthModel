@@ -7,6 +7,8 @@
 #include "Visualizer.hpp"
 #include "utils.hpp"
 #include "Octree.hpp"
+#include "Triangle3D.hpp"
+#include "geometry.hpp"
 
 using namespace cv;
 using namespace std;
@@ -29,7 +31,6 @@ ModelContainer getModelContainer(const FileNode& containerParam) {
     containerParam["cellSize"] >> ans.cellSize;
     return ans;
 }
-
 
 class DevData {
 public:
@@ -191,8 +192,21 @@ int main(int, char**) {
     };
 
     viz::Viz3d displayWindow("Display window");
-    displayWindow.showWidget("Coordinate Widget", viz::WCoordinateSystem());
-    displayWindow.showWidget("Point cloud", mb->toVizWidget());
+    displayWindow.showWidget("Coordinate Widget", viz::WCoordinateSystem(50));
+    //displayWindow.showWidget("Point cloud", mb->toVizWidget());
+
+    Octree<Triangle3D> octree(Vec3f(), Vec3f(128, 128, 128), static_cast<bool(*)(const Box&, const Triangle3D&)>(Geometry::inside), 1);
+    octree.insert(Triangle3D(
+        Vec3f(10, 10, 10),
+        Vec3f(20, 10, 10),
+        Vec3f(10, 20, 10)
+    ));
+    octree.insert(Triangle3D(
+        Vec3f(80, 10, 10),
+        Vec3f(20, 60, 10),
+        Vec3f(10, 20, 70)
+    ));
+    displayWindow.showWidget("Octree", octree.toVizWidget());
     while(!displayWindow.wasStopped())
     {
         displayWindow.spinOnce(16, true);

@@ -1,4 +1,6 @@
 #include <opencv2/opencv.hpp>
+#include <iostream>
+#include <cstring>
 #include "RayLine.hpp"
 #include "Triangle3D.hpp"
 
@@ -12,22 +14,29 @@ Triangle3D::Triangle3D(
     const Vec3f& b,
     const Vec3f& c
 ) {
-    verties[0] = a;
-    verties[1] = b;
-    verties[2] = c;
+    vertices[0] = a;
+    vertices[1] = b;
+    vertices[2] = c;
 }
 
 Triangle3D::Triangle3D(const Triangle3D& other) {
     for (int i = 3; i--; ) {
-        verties[i] = other.verties[i];
+        vertices[i] = other.vertices[i];
     }
 }
 
 Triangle3D& Triangle3D::operator= (const Triangle3D& other) {
     for (int i = 3; i--; ) {
-        verties[i] = other.verties[i];
+        vertices[i] = other.vertices[i];
     }
     return *this;
+}
+
+viz::WPolyLine Triangle3D::toVizWidget() {
+    Mat points(4, 1, CV_32FC3);
+    memcpy(points.data, this->vertices, sizeof(this->vertices));
+    points.at<Vec3f>(3, 0) = this->vertices[0];
+    return viz::WPolyLine(points, viz::Color::cyan());
 }
 
 } // DepthModel

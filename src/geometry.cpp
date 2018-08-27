@@ -1,10 +1,10 @@
 #include <opencv2/opencv.hpp>
 #include <limits>
-#include <utilities>
+#include <utility>
 #include "Box.hpp"
 #include "RayLine.hpp"
 #include "Triangle3D.hpp"
-#include "Geometry.hpp"
+#include "geometry.hpp"
 
 using namespace cv;
 using namespace std;
@@ -21,7 +21,7 @@ bool inside(const Box& box, const Vec3f& point) {
 
 bool inside(const Box& box, const Triangle3D& triangle) {
 #define check(i) \
-    inside(box, triangle.verties[i])
+    inside(box, triangle.vertices[i])
     return check(0) && check(1) && check(2);
 #undef check
 }
@@ -46,13 +46,13 @@ bool intersect(const RayLine& ray, const Triangle3D& triangle) {
     const Vec3f& q1 = ray.endPoint;
     Vec3f q2 = q1 + ray.direction * veryBig;
 
-    Vec3f q1a = triangle.verties[0] - q1;
-    Vec3f q1b = triangle.verties[1] - q1;
-    Vec3f q1c = triangle.verties[2] - q1;
+    Vec3f q1a = triangle.vertices[0] - q1;
+    Vec3f q1b = triangle.vertices[1] - q1;
+    Vec3f q1c = triangle.vertices[2] - q1;
 
-    Vec3f q2a = triangle.verties[0] - q2;
-    Vec3f q2b = triangle.verties[1] - q2;
-    Vec3f q2c = triangle.verties[2] - q2;
+    Vec3f q2a = triangle.vertices[0] - q2;
+    Vec3f q2b = triangle.vertices[1] - q2;
+    Vec3f q2c = triangle.vertices[2] - q2;
 
     // Step 2:
     if (q1c.dot(q1a.cross(q1b)) * q2c.dot(q2a.cross(q2b)) > 0) return false;

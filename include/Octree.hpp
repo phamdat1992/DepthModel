@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <functional>
 #include <vector>
+#include <utility>
 #include "Box.hpp"
 
 namespace DepthModel {
@@ -18,15 +19,15 @@ class Octree {
         const cv::Vec3f& _position,
         const cv::Vec3f& _size,
         fitCheckFunc fn,
-        size_t _nDataThreshold,
-        size_t _nLevelThreshold
+        size_t _nDataThreshold = 8,
+        size_t _nLevelThreshold = 8
     )
         : boundingBox(_position, _size)
         , size(_size)
         , fitCheck(fn)
         , nDataThreshold(_nDataThreshold)
         , nLevelThreshold(_nLevelThreshold)
-        , child({0})
+        , child{0}
     {
     }
 
@@ -43,13 +44,13 @@ class Octree {
         }
         if (this->child[0]) {
             for (int i = 0; i < 8; ++i) {
-                if (this->child[i].insert(dat)) {
+                if (this->child[i]->insert(dat)) {
                     return false;
                 }
             }
         }
         this->data.push_back(dat);
-        if (this->data.size() >= this->nDataThresHold) {
+        if (this->data.size() > this->nDataThreshold) {
             this->extendTree();
         }
     }
@@ -66,6 +67,19 @@ class Octree {
     inline const Octree* getChild(int num) {
         return this->child[num];
     }
+
+    cv::viz::WWidgetMerger toVizWidget() {
+        cv::viz::WWidgetMerger ans;
+        ans.addWidget(this->boundingBox.toVizWidget());
+        for (auto& i: this->data) {
+            ans.addWidget(i.toVizWidget());
+        }
+        if (!this->child[0]) return ans;
+        for (int i = 8; i--; ) {
+            ans.addWidget(this->child[i]->toVizWidget());
+        }
+        return ans;
+    }
     
   protected:
     Box boundingBox;
@@ -75,7 +89,7 @@ class Octree {
     size_t nDataThreshold;
     size_t nLevelThreshold;
 
-    Octree *child[8];
+    Octree<data_type> *child[8];
     std::vector<data_type> data;
 
     void extendTree() {
@@ -103,12 +117,12 @@ class Octree {
             data_type& d = this->data[i];
             bool canBePush = false;
             for (int j = 0; j < 8; ++j) {
-                if (!this->child[j].insert(d)) continue;
+                if (!this->child[j]->insert(d)) continue;
                 canBePush = true;
                 break;
             }
             if (canBePush) continue;
-            swap(this->data[i], this->data[f++]);
+            std::swap(this->data[i], this->data[f++]);
         }
         this->data.resize(f);
     }

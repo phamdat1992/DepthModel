@@ -8,4 +8,8 @@ Box::Box(const cv::Vec3f& pos, const cv::Vec3f& sz)
   : position(pos), size(sz)
 {}
 
+viz::WCube Box::toVizWidget() {
+    return viz::WCube(Point3f(this->position), Point3f(this->position + this->size));
+}
+
 } // DepthModel

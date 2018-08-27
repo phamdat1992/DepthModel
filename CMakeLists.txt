@@ -24,6 +24,8 @@ add_library(DepthModel
   ./src/ModelBuilder.cpp
   ./src/BruteForceModelBuilder.cpp
   ./src/Visualizer.cpp
+  ./src/geometry.cpp
+  ./src/Box.cpp
 )
 
 target_link_libraries(DepthModel ${OpenCV_LIBS})
