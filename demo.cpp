@@ -192,20 +192,33 @@ int main(int, char**) {
     };
 
     viz::Viz3d displayWindow("Display window");
-    displayWindow.showWidget("Coordinate Widget", viz::WCoordinateSystem(50));
+    displayWindow.showWidget("Coordinate Widget", viz::WCoordinateSystem(10));
     //displayWindow.showWidget("Point cloud", mb->toVizWidget());
 
-    Octree<Triangle3D> octree(Vec3f(), Vec3f(128, 128, 128), static_cast<bool(*)(const Box&, const Triangle3D&)>(Geometry::inside), 1);
-    octree.insert(Triangle3D(
-        Vec3f(10, 10, 10),
-        Vec3f(20, 10, 10),
-        Vec3f(10, 20, 10)
-    ));
-    octree.insert(Triangle3D(
-        Vec3f(80, 10, 10),
-        Vec3f(20, 60, 10),
-        Vec3f(10, 20, 70)
-    ));
+    viz::Mesh teapotMesh = viz::Mesh::load("teapot.ply");
+
+    Vec3f minCoor(INT_MAX, INT_MAX, INT_MAX), maxCoor(INT_MIN, INT_MIN, INT_MIN);
+    Vec3f* cloudPoints = teapotMesh.cloud.ptr<Vec3f>();
+    for (int i = 0; i < teapotMesh.cloud.cols; ++i) {
+        Vec3f& point = cloudPoints[i];
+        for (int f = 0; f < 3; ++f) {
+            minCoor[f] = min(minCoor[f], point[f]);
+            maxCoor[f] = max(maxCoor[f], point[f]);
+        }
+    }
+    clog << minCoor << ' ' << maxCoor << endl;
+
+    Octree<Triangle3D> octree(minCoor, maxCoor - minCoor, static_cast<bool(*)(const Box&, const Triangle3D&)>(Geometry::inside));
+    for (unsigned int* i = teapotMesh.polygons.ptr<unsigned int>(), f = 0; f < teapotMesh.polygons.cols; f+= 4) {
+        assert(*(i++) == 3);
+        octree.insert(Triangle3D(
+            cloudPoints[*(i++)],
+            cloudPoints[*(i++)],
+            cloudPoints[*(i++)]
+        ));
+    }
+
+    displayWindow.showWidget("Teapot", viz::WMesh(teapotMesh));
     displayWindow.showWidget("Octree", octree.toVizWidget());
     while(!displayWindow.wasStopped())
     {

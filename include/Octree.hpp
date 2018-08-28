@@ -23,7 +23,6 @@ class Octree {
         size_t _nLevelThreshold = 8
     )
         : boundingBox(_position, _size)
-        , size(_size)
         , fitCheck(fn)
         , nDataThreshold(_nDataThreshold)
         , nLevelThreshold(_nLevelThreshold)
@@ -45,7 +44,7 @@ class Octree {
         if (this->child[0]) {
             for (int i = 0; i < 8; ++i) {
                 if (this->child[i]->insert(dat)) {
-                    return false;
+                    return true;
                 }
             }
         }
@@ -53,6 +52,7 @@ class Octree {
         if (this->data.size() > this->nDataThreshold) {
             this->extendTree();
         }
+        return true;
     }
 
 
@@ -68,12 +68,20 @@ class Octree {
         return this->child[num];
     }
 
+    inline const cv::Vec3f& getPosition() const {
+        return this->boundingBox.position;
+    }
+
+    inline const cv::Vec3f& getSize() const {
+        return this->boundingBox.size;
+    }
+
     cv::viz::WWidgetMerger toVizWidget() {
         cv::viz::WWidgetMerger ans;
         ans.addWidget(this->boundingBox.toVizWidget());
-        for (auto& i: this->data) {
-            ans.addWidget(i.toVizWidget());
-        }
+        //for (auto& i: this->data) {
+            //ans.addWidget(i.toVizWidget());
+        //}
         if (!this->child[0]) return ans;
         for (int i = 8; i--; ) {
             ans.addWidget(this->child[i]->toVizWidget());
@@ -83,8 +91,6 @@ class Octree {
     
   protected:
     Box boundingBox;
-    cv::Vec3f position;
-    cv::Vec3f size;
     fitCheckFunc fitCheck;
     size_t nDataThreshold;
     size_t nLevelThreshold;
@@ -96,12 +102,12 @@ class Octree {
         if (this->child[0] != NULL) {
             return;
         }
-        if (nLevelThreshold == 0) {
+        if (nLevelThreshold <= 0) {
             return;
         }
-        cv::Vec3f newSize = this->size / 2;
+        cv::Vec3f newSize = this->getSize() / 2;
         for (int i = 0; i < 8; ++i) {
-          cv::Vec3f newPos = this->position + cv::Vec3f(
+            cv::Vec3f newPos = this->getPosition() + cv::Vec3f(
                 i & 1 ? newSize[0] : 0,
                 i & 2 ? newSize[1] : 0,
                 i & 4 ? newSize[2] : 0
