@@ -4,6 +4,7 @@
 
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <opencv2/viz.hpp>
 
 namespace DepthModel {
 
@@ -32,6 +33,8 @@ class RayLine {
     cv::Vec3f projection(const cv::Vec3f & point) const;
 
     RayLine& operator= (const RayLine& other);
+
+    virtual cv::viz::WArrow toVizWidget(float length = 3);
 };
 
 
@@ -44,6 +47,8 @@ class ColorRayLine : public RayLine {
     ColorRayLine(cv::Vec3f _endPoint, cv::Vec3f _direction, cv::Vec3b _color);
     ColorRayLine(const ColorRayLine& other);
     ColorRayLine& operator=(const ColorRayLine& other);
+
+    virtual cv::viz::WArrow toVizWidget(float length = 3) override;
 };
 
 

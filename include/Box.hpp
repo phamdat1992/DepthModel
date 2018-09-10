@@ -11,7 +11,7 @@ public:
 
     Box(const cv::Vec3f& pos, const cv::Vec3f& sz);
 
-    cv::viz::WCube toVizWidget();
+    cv::viz::WCube toVizWidget(const cv::viz::Color& color = cv::viz::Color::white());
 };
 
 } // DepthModel

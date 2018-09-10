@@ -13,6 +13,10 @@ bool inside(const Box& box, const Triangle3D& triangle);
 bool intersect(const RayLine& ray, const Triangle3D& triangle);
 bool intersect(const RayLine& ray, const Box& box);
 
+float getIntersectionDistance_noChecking(const RayLine& ray, const Triangle3D& triangle);
+
+cv::Vec3f getIntersection_noChecking(const RayLine& ray, const Triangle3D& triangle);
+
 } // Geometry
 
 } // DepthModel

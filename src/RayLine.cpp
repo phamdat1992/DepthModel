@@ -40,6 +40,10 @@ RayLine& RayLine::operator=(const RayLine& other) {
     return *this;
 }
 
+viz::WArrow RayLine::toVizWidget(float length) {
+    return viz::WArrow(Point3d(this->endPoint), Point3d(this->endPoint + length * this->direction));
+}
+
 
 /**
  * ColorRayLine definition
@@ -72,6 +76,15 @@ bool operator==(const ColorRayLine& u, const ColorRayLine& v) {
         u.endPoint == v.endPoint &&
         u.direction == v.direction &&
         u.color == v.color
+    );
+}
+
+viz::WArrow ColorRayLine::toVizWidget(float length) {
+    return viz::WArrow(
+        Point3d(this->endPoint),
+        Point3d(this->endPoint + length * direction),
+        0.1 / length,
+        viz::Color(this->color[0], this->color[1], this->color[2])
     );
 }
 

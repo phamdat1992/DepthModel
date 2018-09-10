@@ -56,7 +56,7 @@ class Octree {
     }
 
 
-    inline const std::vector<data_type>& getData() {
+    inline const std::vector<data_type>& getData() const {
         return this->data;
     }
 
@@ -64,7 +64,7 @@ class Octree {
         return this->boundingBox;
     }
 
-    inline const Octree* getChild(int num) {
+    inline const Octree* getChild(int num) const {
         return this->child[num];
     }
 
@@ -74,6 +74,10 @@ class Octree {
 
     inline const cv::Vec3f& getSize() const {
         return this->boundingBox.size;
+    }
+
+    inline bool isLeaf() const {
+        return !this->child[0];
     }
 
     cv::viz::WWidgetMerger toVizWidget() {

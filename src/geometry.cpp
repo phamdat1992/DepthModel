@@ -71,7 +71,7 @@ bool intersect(const RayLine& ray, const Triangle3D& triangle) {
  * The idea got from this site.
  * https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
  */
-bool instersect(const RayLine& ray, const Box& box) {
+bool intersect(const RayLine& ray, const Box& box) {
     float tmax = numeric_limits<float>::max();
     float tmin = numeric_limits<float>::min();
     for (int i = 0; i < 3; ++i) {
@@ -83,6 +83,19 @@ bool instersect(const RayLine& ray, const Box& box) {
       if (curmax < tmax) tmax = curmax;
     }
     return true; 
+}
+
+/**
+ * The idea was also got from here
+ * https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
+ */
+float getIntersectionDistance_noChecking(const RayLine& ray, const Triangle3D& triangle) {
+    Vec3f normal = (triangle.vertices[2] - triangle.vertices[0]).cross(triangle.vertices[1] - triangle.vertices[0]);
+    return -ray.endPoint.dot(normal - triangle.vertices[0]) / ray.endPoint.dot(ray.direction);
+}
+
+Vec3f getIntersection_noChecking(const RayLine& ray, const Triangle3D& triangle) {
+    return ray.endPoint + getIntersectionDistance_noChecking(ray, triangle) * ray.direction;
 }
 
 } // DepthModel::Geometry
