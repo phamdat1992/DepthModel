@@ -65,4 +65,10 @@ size_t Vec3iHash::operator()(const Vec3i& u) const {
     return ih(u[0]) ^ ih(u[1]) ^ ih(u[2]);
 }
 
+float distance2(Vec3f a, const Vec3f& b) {
+    a -= b;
+    return (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+}
+
+
 } // DepthModel

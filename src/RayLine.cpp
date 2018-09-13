@@ -83,7 +83,7 @@ viz::WArrow ColorRayLine::toVizWidget(float length) {
     return viz::WArrow(
         Point3d(this->endPoint),
         Point3d(this->endPoint + length * direction),
-        0.1 / length,
+        0.05 / length,
         viz::Color(this->color[0], this->color[1], this->color[2])
     );
 }

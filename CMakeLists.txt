@@ -26,6 +26,7 @@ add_library(DepthModel
   ./src/Visualizer.cpp
   ./src/geometry.cpp
   ./src/Box.cpp
+  ./src/iterateOctree.cpp
 )
 
 target_link_libraries(DepthModel ${OpenCV_LIBS})

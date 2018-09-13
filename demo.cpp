@@ -233,9 +233,23 @@ int main(int, char**) {
     }
 
     displayWindow.showWidget("Boxes", boxes);
+  
+    clog << "Before searching for triangle" << endl;
+    Triangle3D* theFckingTriangle = getFirstTriangleIntersectWithRay(octree, theFckingRay);
+    clog << "After searching for triangle" << endl;
+    if (!theFckingTriangle) {
+        clog << "No fcking triangle" << endl;
+    } else {
+        displayWindow.showWidget("Intersected triangle", theFckingTriangle->toVizWidget());
+        displayWindow.showWidget(
+            "intersection point",
+            viz::WSphere(Vec3d(Geometry::getIntersection_noChecking(theFckingRay, *theFckingTriangle)), 0.3)
+        );
+        clog << Geometry::getIntersectionDistance_noChecking(theFckingRay, *theFckingTriangle) << endl;
+    }
 
-    while(!displayWindow.wasStopped())
-    {
+
+    while(!displayWindow.wasStopped()) {
         displayWindow.spinOnce(16, true);
     }
 

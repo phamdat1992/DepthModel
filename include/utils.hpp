@@ -16,5 +16,11 @@ struct Vec3iHash {
     size_t operator()(const cv::Vec3i&) const;
 };
 
+float distance2(cv::Vec3f a, const cv::Vec3f& b);
+
+inline float distance(const cv::Vec3f& a, const cv::Vec3f& b) {
+    return cv::sqrt(distance2(a, b));
+}
+
 } // DepthModel
 

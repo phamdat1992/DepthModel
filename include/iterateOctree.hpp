@@ -10,7 +10,13 @@
 
 namespace DepthModel {
 
-struct _getAllOctreeBoxWithRay {
+
+/**
+ * TODO: refactor these shit codes
+ *
+ * I do these just because I need some helper function but it must be private
+ */
+static struct _getAllOctreeBoxWithRay {
   template<typename T>
   std::vector<Box> operator()(const Octree<T>& root, const RayLine& ray) {
     ans.clear();
@@ -34,6 +40,8 @@ private:
     }
   }
 } getAllOctreeBoxWithRay;
+
+Triangle3D* getFirstTriangleIntersectWithRay(const Octree<Triangle3D>& root, const RayLine& ray);
 
   
 } // DepthModel

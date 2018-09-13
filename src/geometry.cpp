@@ -87,11 +87,11 @@ bool intersect(const RayLine& ray, const Box& box) {
 
 /**
  * The idea was also got from here
- * https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
+ * https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
  */
 float getIntersectionDistance_noChecking(const RayLine& ray, const Triangle3D& triangle) {
-    Vec3f normal = (triangle.vertices[2] - triangle.vertices[0]).cross(triangle.vertices[1] - triangle.vertices[0]);
-    return -ray.endPoint.dot(normal - triangle.vertices[0]) / ray.endPoint.dot(ray.direction);
+    Vec3f normal = (triangle.vertices[1] - triangle.vertices[0]).cross(triangle.vertices[2] - triangle.vertices[0]);
+    return (triangle.vertices[0] - ray.endPoint).dot(normal) / ray.direction.dot(normal);
 }
 
 Vec3f getIntersection_noChecking(const RayLine& ray, const Triangle3D& triangle) {

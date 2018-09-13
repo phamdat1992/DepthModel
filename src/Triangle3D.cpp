@@ -8,7 +8,10 @@ using namespace cv;
 
 namespace DepthModel {
 
-Triangle3D::Triangle3D() {}
+Triangle3D::Triangle3D()
+  : Triangle3D(Vec3f(), Vec3f(), Vec3f())
+{}
+
 Triangle3D::Triangle3D(
     const Vec3f& a,
     const Vec3f& b,
