@@ -32,7 +32,6 @@ int main(int, char**) {
             maxCoor[f] = max(maxCoor[f], point[f]);
         }
     }
-    clog << minCoor << ' ' << maxCoor << endl;
 
     Octree<Triangle3D> octree(minCoor, maxCoor - minCoor, static_cast<bool(*)(const Box&, const Triangle3D&)>(Geometry::inside), 8, 16);
     for (unsigned int* i = teapotMesh.polygons.ptr<unsigned int>(), f = 0; f < teapotMesh.polygons.cols; f+= 4) {
@@ -43,39 +42,43 @@ int main(int, char**) {
             cloudPoints[*(i++)]
         ));
     }
-
-    ColorRayLine theFckingRay(minCoor, maxCoor - minCoor, Color::cyan());
     displayWindow.showWidget("Teapot", viz::WMesh(teapotMesh));
     //displayWindow.showWidget("Octree", octree.toVizWidget());
-    displayWindow.showWidget("Ray", theFckingRay.toVizWidget(10));
 
-    viz::WWidgetMerger boxes;
 
-    for (int i = 8; i--; ) {
-      for (auto b: getAllOctreeBoxWithRay(*octree.getChild(i), theFckingRay)) {
-        boxes.addWidget(b.toVizWidget(viz::Color::red()));
-      }
-    }
-
-    displayWindow.showWidget("Boxes", boxes);
   
-    clog << "Before searching for triangle" << endl;
-    Triangle3D* theFckingTriangle = getFirstTriangleIntersectWithRay(octree, theFckingRay);
-    clog << "After searching for triangle" << endl;
-    if (!theFckingTriangle) {
-        clog << "No fcking triangle" << endl;
-    } else {
-        displayWindow.showWidget("Intersected triangle", theFckingTriangle->toVizWidget());
-        displayWindow.showWidget(
-            "intersection point",
-            viz::WSphere(Vec3d(Geometry::getIntersection_noChecking(theFckingRay, *theFckingTriangle)), 0.3)
-        );
-        clog << Geometry::getIntersectionDistance_noChecking(theFckingRay, *theFckingTriangle) << endl;
-    }
-
-
+    displayWindow.spinOnce(33, true);
     while(!displayWindow.wasStopped()) {
-        displayWindow.spinOnce(16, true);
+        RayLine theFckingRay = cameraPoseToCameraRay(displayWindow.getViewerPose());
+        displayWindow.showWidget("Ray", viz::WSphere(Vec3d(theFckingRay.endPoint + theFckingRay.direction * 5), 0.05));
+        viz::WWidgetMerger boxes;
+    
+        for (int i = 8; i--; ) {
+          for (auto b: getAllOctreeBoxWithRay(*octree.getChild(i), theFckingRay)) {
+            boxes.addWidget(b.toVizWidget(viz::Color::red()));
+          }
+        }
+    
+        displayWindow.showWidget("Boxes", boxes);
+
+        //clog << theFckingRay.endPoint << ' ' << theFckingRay.direction << endl;
+        Triangle3D* theFckingTriangle = getFirstTriangleIntersectWithRay(octree, theFckingRay);
+        bool hasTriangle = !!theFckingTriangle;
+        if (!theFckingTriangle) {
+            //clog << "No fcking triangle" << endl;
+        } else {
+            displayWindow.showWidget("Intersected triangle", theFckingTriangle->toVizWidget());
+            //displayWindow.showWidget(
+                //"intersection point",
+                //viz::WSphere(Vec3d(Geometry::getIntersection_noChecking(theFckingRay, *theFckingTriangle)), 0.3)
+            //);
+            delete theFckingTriangle;
+        }
+        displayWindow.spinOnce(33, true);
+        displayWindow.removeWidget("Ray");
+        displayWindow.removeWidget("Boxes");
+        if (hasTriangle)
+          displayWindow.removeWidget("Intersected triangle");
     }
 
     return 0;

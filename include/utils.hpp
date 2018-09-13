@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include "PoseWrapper.hpp"
+#include "RayLine.hpp"
 
 namespace DepthModel {
 
@@ -21,6 +22,9 @@ float distance2(cv::Vec3f a, const cv::Vec3f& b);
 inline float distance(const cv::Vec3f& a, const cv::Vec3f& b) {
     return cv::sqrt(distance2(a, b));
 }
+
+RayLine cameraPoseToCameraRay(const cv::Affine3d& cameraPose);
+
 
 } // DepthModel
 

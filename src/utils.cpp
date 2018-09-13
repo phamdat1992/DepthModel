@@ -70,5 +70,15 @@ float distance2(Vec3f a, const Vec3f& b) {
     return (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
+RayLine cameraPoseToCameraRay(const Affine3d& cameraPose) {
+    Vec4d camPos(0, 0, 0, 1);
+    Vec4d camDir(0, 0, +1, 0);
+    camPos = cameraPose.matrix * camPos;
+    camDir = cameraPose.matrix * camDir;
+    camPos /= camPos[3];
+    
+    return RayLine(Vec3f(camPos[0], camPos[1], camPos[2]), Vec3f(camDir[0], camDir[1], camDir[2]));
+}
+
 
 } // DepthModel

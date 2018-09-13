@@ -26,7 +26,6 @@ Triangle3D* getFirstTriangleIntersectWithRay(const Octree<Triangle3D>& root, con
         float sqrdis = Geometry::getIntersectionDistance_noChecking(ray, triangle);
         if (sqrdis < curSquareDistance) {
             curSquareDistance = sqrdis;
-            clog << curSquareDistance << endl;
             if (!ans) ans = new Triangle3D();
             *ans = triangle;
         }
@@ -58,7 +57,6 @@ Triangle3D* getFirstTriangleIntersectWithRay(const Octree<Triangle3D>& root, con
         );
         if (!triangle) continue;
         float sqrdis = Geometry::getIntersectionDistance_noChecking(ray, *triangle);
-        clog << curSquareDistance << endl;
         if (sqrdis < curSquareDistance) {
             curSquareDistance = sqrdis;
             if (!ans) ans = new Triangle3D();

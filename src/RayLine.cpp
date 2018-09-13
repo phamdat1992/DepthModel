@@ -41,7 +41,7 @@ RayLine& RayLine::operator=(const RayLine& other) {
 }
 
 viz::WArrow RayLine::toVizWidget(float length) {
-    return viz::WArrow(Point3d(this->endPoint), Point3d(this->endPoint + length * this->direction));
+    return viz::WArrow(Point3d(this->endPoint), Point3d(this->endPoint + length * this->direction), 0.005);
 }
 
 
