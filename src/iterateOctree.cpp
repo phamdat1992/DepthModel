@@ -17,6 +17,7 @@ namespace DepthModel {
 
 Triangle3D* getFirstTriangleIntersectWithRay(const Octree<Triangle3D>& root, const RayLine& ray) {
     if (!Geometry::intersect(ray, root.getBoundingBox())) return NULL;
+    clog << root.getPosition() << ' ' << root.getSize() << ' ' << root.getData().size() << endl;
 
     float curSquareDistance = numeric_limits<float>::infinity();
     Triangle3D* ans = NULL;

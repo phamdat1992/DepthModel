@@ -35,33 +35,39 @@ int main(int, char**) {
 
     Octree<Triangle3D> octree(minCoor, maxCoor - minCoor, static_cast<bool(*)(const Box&, const Triangle3D&)>(Geometry::inside), 8, 16);
     for (unsigned int* i = teapotMesh.polygons.ptr<unsigned int>(), f = 0; f < teapotMesh.polygons.cols; f+= 4) {
-        assert(*(i++) == 3);
-        octree.insert(Triangle3D(
+        //cout << i[0] << endl;
+        if (*(i++) != 3) assert(false); // seem like if I do assert(*(i++) == 3), it will not working, maybe it is compiler's optimization.
+        //cout << i[0] << ' ' << i[1] << ' ' << i[2] << endl;
+        //clog << "COOL" << endl;
+        bool ok = octree.insert(Triangle3D(
             cloudPoints[*(i++)],
             cloudPoints[*(i++)],
             cloudPoints[*(i++)]
         ));
+        assert(ok);
     }
     displayWindow.showWidget("Teapot", viz::WMesh(teapotMesh));
     //displayWindow.showWidget("Octree", octree.toVizWidget());
-
-
+    //displayWindow.setRenderingProperty("Teapot", REPRESENTATION, REPRESENTATION_WIREFRAME);
   
     displayWindow.spinOnce(33, true);
     while(!displayWindow.wasStopped()) {
+        displayWindow.showWidget("crosshair", viz::WText("+", Point(displayWindow.getWindowSize()) / 2 - Point(5, 15), 20));
         RayLine theFckingRay = cameraPoseToCameraRay(displayWindow.getViewerPose());
-        displayWindow.showWidget("Ray", viz::WSphere(Vec3d(theFckingRay.endPoint + theFckingRay.direction * 5), 0.05));
-        viz::WWidgetMerger boxes;
     
+        viz::WWidgetMerger boxes;
+        bool hasBox = 0;
         for (int i = 8; i--; ) {
           for (auto b: getAllOctreeBoxWithRay(*octree.getChild(i), theFckingRay)) {
+            hasBox = 1;
             boxes.addWidget(b.toVizWidget(viz::Color::red()));
           }
         }
     
-        displayWindow.showWidget("Boxes", boxes);
+        //if (hasBox) 
+          //displayWindow.showWidget("Boxes", boxes);
 
-        //clog << theFckingRay.endPoint << ' ' << theFckingRay.direction << endl;
+        clog << endl;
         Triangle3D* theFckingTriangle = getFirstTriangleIntersectWithRay(octree, theFckingRay);
         bool hasTriangle = !!theFckingTriangle;
         if (!theFckingTriangle) {
@@ -75,10 +81,6 @@ int main(int, char**) {
             delete theFckingTriangle;
         }
         displayWindow.spinOnce(33, true);
-        displayWindow.removeWidget("Ray");
-        displayWindow.removeWidget("Boxes");
-        if (hasTriangle)
-          displayWindow.removeWidget("Intersected triangle");
     }
 
     return 0;

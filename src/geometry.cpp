@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <cmath>
 #include <limits>
 #include <utility>
 #include "Box.hpp"
@@ -40,7 +41,7 @@ bool intersect(const RayLine& ray, const Triangle3D& triangle) {
     // In step 1) pick q1 is the ray's endpoint, p2 is far away from q1 in the ray's direction.
     // Step 2 and 3 stay the same. In step 2, if q1 and q2 do not lie on diffirent sides of the plane,
     // the triangle is lie "behind" the ray's endpoint.
-    const float veryBig = 1e9;
+    const float veryBig = 1e8;
 
     // Step 1:
     const Vec3f& q1 = ray.endPoint;
@@ -54,17 +55,20 @@ bool intersect(const RayLine& ray, const Triangle3D& triangle) {
     Vec3f q2b = triangle.vertices[1] - q2;
     Vec3f q2c = triangle.vertices[2] - q2;
 
+#define sign(x) ((x) < 0 ? -1 : x > 0)
+
     // Step 2:
-    if (q1c.dot(q1a.cross(q1b)) * q2c.dot(q2a.cross(q2b)) > 0) return false;
+    if (sign(q1c.dot(q1a.cross(q1b))) * sign(q2c.dot(q2a.cross(q2b))) > 0) return false;
     
     // Step 3:
     Vec3f q1q2 = q2 - q1;
-    float x = q1b.dot(q1q2.cross(q1a));
-    float y = q1c.dot(q1q2.cross(q1b));
-    float z = q1a.dot(q1q2.cross(q1c));
+    float x = sign(q1b.dot(q1q2.cross(q1a)));
+    float y = sign(q1c.dot(q1q2.cross(q1b)));
+    float z = sign(q1a.dot(q1q2.cross(q1c)));
     if (x * y < 0) return false;
     if (x * z < 0) return false;
     return true;
+#undef sign
 }
 
 /**

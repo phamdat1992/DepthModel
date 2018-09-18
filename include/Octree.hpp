@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include <utility>
+#include <iostream>
 #include "Box.hpp"
 
 namespace DepthModel {
@@ -38,6 +39,7 @@ class Octree {
     }
 
     bool insert(const data_type& dat) {
+        //std::cerr << getPosition() << ' ' << getSize() << ' ' << nLevelThreshold << std::endl;
         if (!fitCheck(this->boundingBox, dat)) {
             return false;
         }
