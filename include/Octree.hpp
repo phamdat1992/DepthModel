@@ -1,7 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 #include <functional>
-#include <vector>
+#include <list>
 #include <utility>
 #include <iostream>
 #include "Box.hpp"
@@ -27,6 +27,7 @@ class Octree {
         , fitCheck(fn)
         , nDataThreshold(_nDataThreshold)
         , nLevelThreshold(_nLevelThreshold)
+        , nElements(0)
         , child{0}
     {
     }
@@ -43,6 +44,7 @@ class Octree {
         if (!fitCheck(this->boundingBox, dat)) {
             return false;
         }
+        ++this->nElements;
         if (this->child[0]) {
             for (int i = 0; i < 8; ++i) {
                 if (this->child[i]->insert(dat)) {
@@ -57,8 +59,34 @@ class Octree {
         return true;
     }
 
+    bool remove(const data_type& dat) {
+        if (!fitCheck(this->boundingBox, dat)) {
+            return false;
+        }
+        --this->nElements;
+        bool foundAtChild = false;
+        if (!this->isLeaf()) {
+            for (int i = 8; i--; ) {
+                if (!this->data[i]->remove(dat)) continue;
+                foundAtChild = true;
+                break;
+            }
+        }
+        if (!foundAtChild) {
+            for (auto i = this->data.begin(); i != this->data.end(); ++i) {
+                if (*i != dat) continue;
+                this->data.erase(i);
+                break;
+            }
+        }
+        if (this->nElements <= this->nDataThresHold) {
+            this->shirnk();
+        }
+        return true;
+    }
 
-    inline const std::vector<data_type>& getData() const {
+
+    inline const std::list<data_type>& getData() const {
         return this->data;
     }
 
@@ -82,6 +110,10 @@ class Octree {
         return !this->child[0];
     }
 
+    inline size_t getNElements() const {
+        return this->nElements;
+    }
+
     cv::viz::WWidgetMerger toVizWidget() {
         cv::viz::WWidgetMerger ans;
         ans.addWidget(this->boundingBox.toVizWidget());
@@ -100,9 +132,10 @@ class Octree {
     fitCheckFunc fitCheck;
     size_t nDataThreshold;
     size_t nLevelThreshold;
+    size_t nElements;
 
     Octree<data_type> *child[8];
-    std::vector<data_type> data;
+    std::list<data_type> data;
 
     void extendTree() {
         if (this->child[0] != NULL) {
@@ -124,20 +157,31 @@ class Octree {
                 this->nDataThreshold, this->nLevelThreshold - 1
             );
         }
-        int f = 0;
-        for (int i = 0; i < (int)this->data.size(); ++i) {
-            data_type& d = this->data[i];
+
+        for (int i = 0, sz = this->data.size(); i < sz; ++i) {
+            data_type& d = this->data.front();
             bool canBePush = false;
             for (int j = 0; j < 8; ++j) {
                 if (!this->child[j]->insert(d)) continue;
                 canBePush = true;
                 break;
             }
-            if (canBePush) continue;
-            std::swap(this->data[i], this->data[f++]);
+            if (!canBePush) {
+                this->data.push_back(d);
+            }
+            this->data.pop_front();
         }
-        this->data.resize(f);
     }
+
+    void shrinkTree() {
+        if (this->isLeaf()) return;
+        for (int i = 8; i--; ) {
+            this->child[i]->shrinkTree();
+            this->data.splice(this->data.end(), this->child[i]->data);  // O(1) babe =)
+            delete this->data[i];
+        }
+    }
+
 };
 
 } // DepthModel

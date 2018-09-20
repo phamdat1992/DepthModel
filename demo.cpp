@@ -47,7 +47,7 @@ int main(int, char**) {
         assert(ok);
     }
     displayWindow.showWidget("Teapot", viz::WMesh(teapotMesh));
-    //displayWindow.showWidget("Octree", octree.toVizWidget());
+    displayWindow.showWidget("Octree", octree.toVizWidget());
     //displayWindow.setRenderingProperty("Teapot", REPRESENTATION, REPRESENTATION_WIREFRAME);
   
     displayWindow.spinOnce(33, true);
