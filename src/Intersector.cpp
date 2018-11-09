@@ -17,14 +17,7 @@ cv::Vec3f CoarseEstimate(cv::Vec3f OCenter, cv::Vec4f TarPlane, cv::Vec3f Point)
 	cv::Vec3f LineDir = cv::Vec3f(Point - OCenter);
 
 	float Temp = sqr(First) + sqr(Second) + sqr(Third);
-	cv::Vec3f PointOnPlane = cv::Vec3f(cv::Vec3f((First * Fourth) / Temp, (Second * Fourth) / Temp, (Third * Fourth) / Temp));
-	PointOnPlane *= -1;
-	/*
-	std::cout << LineDir[0] << ' ' << LineDir[1] << ' ' << LineDir[2] << '\n';
-	std::cout << (PointOnPlane - OCenter).dot(TarNorm) << '\n';
-	*/
-	float Target = (PointOnPlane - OCenter).dot(TarNorm) / LineDir.dot(TarNorm);
-	
+	float Target = - (OCenter.dot(TarNorm) + Fourth) / LineDir.dot(TarNorm);
 	cv::Vec3f TarPoint = (Target * LineDir + OCenter);
 
 	return TarPoint;
