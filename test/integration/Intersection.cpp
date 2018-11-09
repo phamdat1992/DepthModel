@@ -7,11 +7,12 @@
 
 using namespace std;
 
-float a, b, c, d, x, y, z, m, n, o = 0;
-
 int main()
 {
 	ios_base::sync_with_stdio(0);
+	
+	float a, b, c, d, x, y, z, m, n, o = 0;
+	
 	cin >> a >> b >> c >> d >> x >> y >> z >> m >> n >> o;
 	/*
 	a = b = c = 1;
