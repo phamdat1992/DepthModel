@@ -4,7 +4,10 @@
 #include "Intersector.h"
 #endif
 
-#define sqr(x) x * x
+double sqr(double x)
+{
+	return x * x;
+}
 
 cv::Vec3f CoarseEstimate(cv::Vec3f OCenter, cv::Vec4f TarPlane, cv::Vec3f Point)
 {
