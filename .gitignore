@@ -17,4 +17,5 @@ demo
 # .log files
 *.log
 
+.idea/
 images/
